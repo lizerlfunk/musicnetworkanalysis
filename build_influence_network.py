@@ -1,5 +1,6 @@
 """
-
+Name
+____
 build_influence_network.py
 
 Notes
@@ -15,34 +16,9 @@ import csv
 import matplotlib.pyplot as plt
 import networkx as nx
 import numpy as np
-import pandas as pd
 import powerlaw
-import plfit_py
 import scipy as sci 
-import statistics 
 
-def get_genre(inf_data):
-	"""
-	Puts the genres present in the file influence_data.csv into a list 
-	
-	Parameters
-	----------
-	inf_data : the file influence_data.csv
-
-	Returns
-	-------
-	genre_list : a list of the genres in the file influence_data.csv
-
-	Notes
-	-----
-	"""
-	genre_list = []
-	for row in inf_data:
-		if row[2] not in genre_list:
-			genre_list.append(row[2])
-	
-	return genre_list
-	
 def build_graph(inf_data, artist_data):
 	"""
 	Returns the directed graph of artistic influeence taken from influence_data.csv
@@ -98,61 +74,175 @@ def build_graph(inf_data, artist_data):
 
 	return graph
 
-def build_decade_graph(graph, decade):
-	# Must make copy to avoid changing intial graph!
-	new_graph = graph.copy()
-	# We need to loop through our graph's nodes but within the loop we 
-	# are removing edges! Note that self.network.nodes is a dictionary and would be chaning while we iterate.
-	# This is not allowed by python. To get around this we predfine nodes as 
-	nodes = dict(new_graph.nodes(data = True))
-	# And then we loop throught the nodes dictionary
-	for node in nodes:
-		node_decade = int(nodes[node]["active_start"])
-		if node_decade > decade:		
-			new_graph.remove_node(node)
-	print("The decade that we have selected is: " + str(decade))
+def build_genre_graph(genre, inf_data, artist_data):
+	"""
+	Returns the directed graph of the artistic influeence of a particular genre taken from influence_data.csv 
+	   
+	Parameters
+	----------
+	genre : the desired genre
+	inf_data : the file influence_data.csv
+	arist_data : the file data_by_artist.csv
+	
+	Returns
+	-------
+	graph : a NetworkX directed graph
+
+	Notes
+	-----
+    	The available genres should be listed for ease of use. This will be wored on
+	"""
+	graph = nx.DiGraph()
+	for row in inf_data:
+		# Should I use == or is to test for genre?
+		if graph.has_node(row[0]) is False and row[2] == genre:	
+			graph.add_node(row[0], name = row[1], genre = row[2], active_start = row[3] )
+		if graph.has_node(row[4]) is False and row[6] == genre:
+			graph.add_node(row[4], name = row[5], genre = row[6], active_start = row[7])
+		if row[2] == genre and row[6] == genre:
+			graph.add_edge(row[4],row[0])
+	# Add more attributes to our nodes
+	for row in artist_data:
+		for node in graph:
+			if row[1] == node:
+				graph.nodes[node]["danceability"] = row[2]
+				graph.nodes[node]["energy"] = row[3]
+				graph.nodes[node]["valence"] = row[4]
+				graph.nodes[node]["tempo"] = row[5]
+				graph.nodes[node]["loudness"] = row[6]
+				graph.nodes[node]["key"] = row[8]
+				graph.nodes[node]["acousticness"] = row[9]
+				graph.nodes[node]["instrumentalness"] = row[10]
+				graph.nodes[node]["liveness"] = row[11]
+				graph.nodes[node]["speechiness"] = row[12]
+				graph.nodes[node]["duration_ms"] = row[13]
+				graph.nodes[node]["popularity"] = row[14]
+				graph.nodes[node]["count"] = row[15]
 	# Is our graph an acyclic directed graph
-	print("Our graph is an acyclic directed graph: " + str(nx.is_directed_acyclic_graph(new_graph)))
+	print("Our graph is an acyclic directed graph: " + str(nx.is_directed_acyclic_graph(graph)))
 
 	# Check nodes
-	num_nodes = new_graph.number_of_nodes()
-	num_edges = new_graph.number_of_edges()
+	num_nodes = graph.number_of_nodes()
+	num_edges = graph.number_of_edges()
 	num_possible_edges = num_nodes*(num_nodes - 1)
 	print("Our artistic influence network has " + str(num_nodes)+" artists.")
 	print("Our artistic influence network has " + str(num_edges)+" edges out of a possible " + str(num_possible_edges) + " possible edges.")
-	print("Our network density is: " + str(nx.density(new_graph)))
+	print("Our network density is: " + str(nx.density(graph)))
 
-	return new_graph
+	return graph
 
-def build_decade_genre_graph(graph, decade, genre):
-	# Must make copy to avoid changing intial graph!
-	new_graph = graph.copy()
-	# We need to loop through our graph's nodes but within the loop we 
-	# are removing edges! Note that self.network.nodes is a dictionary and would be chaning while we iterate.
-	# This is not allowed by python. To get around this we predfine nodes as 
-	nodes = dict(new_graph.nodes(data = True))
-	# And then we loop throught the nodes dictionary
-	for node in nodes:
-		node_decade = int(nodes[node]["active_start"])
-		node_genre = nodes[node]["genre"]
-		if node_decade == decade:
-			if node_genre != genre:
-				new_graph.remove_node(node)
-		if node_decade > decade:	
-			new_graph.remove_node(node)
-	print("The decade that we have selected is: " + str(decade) + " and the genre we have selected is " + str(genre))
+def build_decade_graph(decade, inf_data, artist_data):
+	"""
+	Returns the directed graph of the artistic influeence during a specified decade taken from influence_data.csv 
+	   
+	Parameters
+	----------
+	decade : the desired decade 
+	inf_data : the file influence_data.csv
+	arist_data : the file data_by_artist.csv
+	
+	Returns
+	-------
+	graph : a NetworkX directed graph
+
+	Notes
+	-----
+	"""
+	graph = nx.DiGraph()
+	for row in inf_data:
+		if int(row[7]) == decade:
+			if graph.has_node(row[0]) is False:	
+				graph.add_node(row[0], name = row[1], genre = row[2], active_start = row[3] )
+			if graph.has_node(row[4]) is False:
+				graph.add_node(row[4], name = row[5], genre = row[6], active_start = row[7])
+			graph.add_edge(row[4],row[0])
+		# Add more attributes to our nodes
+		for row in artist_data:
+			for node in graph:
+				if row[1] == node:
+					graph.nodes[node]["danceability"] = row[2]
+					graph.nodes[node]["energy"] = row[3]
+					graph.nodes[node]["valence"] = row[4]
+					graph.nodes[node]["tempo"] = row[5]
+					graph.nodes[node]["loudness"] = row[6]
+					graph.nodes[node]["key"] = row[8]
+					graph.nodes[node]["acousticness"] = row[9]
+					graph.nodes[node]["instrumentalness"] = row[10]
+					graph.nodes[node]["liveness"] = row[11]
+					graph.nodes[node]["speechiness"] = row[12]
+					graph.nodes[node]["duration_ms"] = row[13]
+					graph.nodes[node]["popularity"] = row[14]
+					graph.nodes[node]["count"] = row[15]
 	# Is our graph an acyclic directed graph
-	print("Our graph is an acyclic directed graph: " + str(nx.is_directed_acyclic_graph(new_graph)))
+	print("Our graph is an acyclic directed graph: " + str(nx.is_directed_acyclic_graph(graph)))
 
 	# Check nodes
-	num_nodes = new_graph.number_of_nodes()
-	num_edges = new_graph.number_of_edges()
+	num_nodes = graph.number_of_nodes()
+	num_edges = graph.number_of_edges()
 	num_possible_edges = num_nodes*(num_nodes - 1)
 	print("Our artistic influence network has " + str(num_nodes)+" artists.")
 	print("Our artistic influence network has " + str(num_edges)+" edges out of a possible " + str(num_possible_edges) + " possible edges.")
-	print("Our network density is: " + str(nx.density(new_graph)))
+	print("Our network density is: " + str(nx.density(graph)))
 
-	return new_graph
+	return graph
+
+def build_out_of_genre_graph(inf_data, artist_data):
+	"""
+	Returns a directed graph of artists whose influencers lie outside of their genre so we'll be able to more easily
+	see if, for example, an R&B group is influenced by a Jazz musician.  
+	Parameters
+	----------
+	decade : the desired decade 
+	inf_data : the file influence_data.csv
+	arist_data : the file data_by_artist.csv
+	
+	Returns
+	-------
+	graph : a NetworkX directed graph
+
+	Notes
+	-----
+	This is more a lark but useful things sometimes come out of larks. Though, on examination of the raw data this may
+	not be too terribly useful as Pop/Rock is such a large umbrella.
+	"""
+	graph = nx.DiGraph()
+	for row in inf_data:
+		if row[2] != row[6]:
+			# Should I use == or is to test for genre?
+			if graph.has_node(row[0]) is False:	
+				graph.add_node(row[0], name = row[1], genre = row[2], active_start = row[3] )
+			if graph.has_node(row[4]) is False:
+				graph.add_node(row[4], name = row[5], genre = row[6], active_start = row[7])
+			graph.add_edge(row[4],row[0])
+		# Add more attributes to our nodes
+		for row in artist_data:
+			for node in graph:
+				if row[1] == node:
+					graph.nodes[node]["danceability"] = row[2]
+					graph.nodes[node]["energy"] = row[3]
+					graph.nodes[node]["valence"] = row[4]
+					graph.nodes[node]["tempo"] = row[5]
+					graph.nodes[node]["loudness"] = row[6]
+					graph.nodes[node]["key"] = row[8]
+					graph.nodes[node]["acousticness"] = row[9]
+					graph.nodes[node]["instrumentalness"] = row[10]
+					graph.nodes[node]["liveness"] = row[11]
+					graph.nodes[node]["speechiness"] = row[12]
+					graph.nodes[node]["duration_ms"] = row[13]
+					graph.nodes[node]["popularity"] = row[14]
+					graph.nodes[node]["count"] = row[15]
+	# Is our graph an acyclic directed graph
+	print("Our graph is an acyclic directed graph: " + str(nx.is_directed_acyclic_graph(graph)))
+
+	# Check nodes
+	num_nodes = graph.number_of_nodes()
+	num_edges = graph.number_of_edges()
+	num_possible_edges = num_nodes*(num_nodes - 1)
+	print("Our artistic influence network has " + str(num_nodes)+" artists.")
+	print("Our artistic influence network has " + str(num_edges)+" edges out of a possible " + str(num_possible_edges) + " possible edges.")
+	print("Our network density is: " + str(nx.density(graph)))
+
+	return graph
 
 def calculate_centrality(graph):
 	"""
@@ -167,10 +257,10 @@ def calculate_centrality(graph):
 	Notes
 	-----
 	"""
-	# Compute the in degree centrality of our graph
+	# Compute the degree centrality of our graph
 	in_deg_cent_dict = nx.in_degree_centrality(graph)
-	# Compute the out degree centrality of our graph
-	out_deg_cent_dict = nx.out_degree_centrality(graph)
+	# Compute the degree centrality of our graph
+	out_deg_cent_dict = nx.in_degree_centrality(graph)
 	# Compute the betweenness centrality of our graph
 	bet_cent_dict = nx.betweenness_centrality(graph)
 	# Compute the Katz centrality of our graph
@@ -178,7 +268,7 @@ def calculate_centrality(graph):
 	# Compute the PageRank of nodes on our graph
 	pagerank_dict = nx.pagerank(graph)
 	# Compute the eigenvector centrality of our graph
-	eigenvector_dict = nx.eigenvector_centrality(graph, max_iter = 500)
+	eigenvector_dict = nx.eigenvector_centrality(graph)
 	# Computer the closeness centrality of our graph
 	closeness_dict = nx.closeness_centrality(graph)
 	# Compute the global reaching centrality of our graph
@@ -190,96 +280,12 @@ def calculate_centrality(graph):
 		filewriter.writerow(["artist_id","artist_name", "in_degree_centrality", "out_degree_centrality", "betweenness_centrality", "katz_centrality", "pagerank", "eigenvector_centrality","closeness_centrality"])
 		for node in graph.nodes:
 			artist_name = nx.get_node_attributes(inf_graph, "name")
-			row = [node, artist_name[node], in_deg_cent_dict[node], out_deg_cent_dict[node], bet_cent_dict[node], katz_cent_dict[node], pagerank_dict[node], eigenvector_dict[node], closeness_dict[node]]
+			row = [node, artist_name[node], int_deg_cent_dict[node], out_deg_cent_dict[node], bet_cent_dict[node], katz_cent_dict[node], pagerank_dict[node], eigenvector_dict[node], closeness_dict[node]]
 			filewriter.writerow(row)
 
-
-# This was lifted from http://github.com/flaviovdf/allmusic-disruption
-def compute_disruption(G, min_in=1, min_out=0):
-
-    id_to_node = dict((i, n) for i, n in enumerate(G.nodes))
-    in_count = dict(G.in_degree(G.nodes))
-    out_count = dict(G.out_degree(G.nodes))
-
-    F = nx.to_scipy_sparse_matrix(G, format='csr')
-    T = nx.to_scipy_sparse_matrix(G, format='csc')
-    D = np.zeros(shape=(F.shape[0], 6))
-
-    for node_id in range(F.shape[0]):
-        if in_count[id_to_node[node_id]] >= min_in and \
-                out_count[id_to_node[node_id]] >= min_out:
-            ni = 0
-            nj = 0
-            nk = 0
-
-            outgoing = F[node_id].nonzero()[1]
-            incoming = T[:, node_id].nonzero()[0]
-            outgoing_set = set(outgoing)
-
-            for other_id in incoming:
-                second_level = F[other_id].nonzero()[1]
-                if len(outgoing_set.intersection(second_level)) == 0:
-                    ni += 1
-                else:
-                    nj += 1
-
-            # who mentions my influences
-            who_mentions_my_influences = np.unique(T[:, outgoing].nonzero()[0])
-            for other_id in who_mentions_my_influences:
-                # do they mention me?! if no, add nk
-                if F[other_id, node_id] == 0 and other_id != node_id:
-                    nk += 1
-
-            D[node_id, 0] = ni
-            D[node_id, 1] = nj
-            D[node_id, 2] = nk
-            D[node_id, 3] = (ni - nj) / (ni + nj + nk)
-            D[node_id, 4] = in_count[id_to_node[node_id]]
-            D[node_id, 5] = out_count[id_to_node[node_id]]
-        else:
-            D[node_id, 0] = np.nan
-            D[node_id, 1] = np.nan
-            D[node_id, 2] = np.nan
-            D[node_id, 3] = np.nan
-            D[node_id, 4] = in_count[id_to_node[node_id]]
-            D[node_id, 5] = out_count[id_to_node[node_id]]
-
-    return pd.DataFrame(D, index=G.nodes,
-                        columns=['ni', 'nj', 'nk', 'disruption', 'in', 'out'])
-
-def find_in_out_degree_collision(graph):
-	node_list = []
-	for node in graph:
-		if graph.in_degree(node) == graph.out_degree(node):
-			node_list.append(node)
-	print("We have " + str(len(node_list)) + " instances where a node's in degree is equal to its out degree.")
-
-	return node_list	
-
 def plot_power_law(graph):
-	"""
-	Compare a power law distribution of node in-degrees to lognormal, exponential, lognormal positive, stretched exponential, and truncated power law	
-
-	Parameters
-	----------
-	graph : a NetworkX directed graph
-	
-	Notes
-	-----
-	See comment by Aaron Clauset in the thread:
-	https://stackoverflow.com/questions/49266070/comparing-power-law-with-other-distributions
-
-	"""
 	data = [graph.in_degree(n) for n in graph.nodes()]
-	fit = powerlaw.Fit(data)
-	print("-------------------")
-	print("Power law compared with lognormal: " + str(fit.distribution_compare('power_law', 'lognormal')))
-	print("Power law compared with exponential: " + str(fit.distribution_compare('power_law', 'exponential')))
-	print("Power law compared with lognormal positive: " + str(fit.distribution_compare('power_law', 'lognormal_positive')))
-	print("Power law compared with stretched exponential: " + str(fit.distribution_compare('power_law', 'stretched_exponential')))
-	print("Power law compard with truncated power law: " + str(fit.distribution_compare('power_law', 'truncated_power_law')))
-	print("-------------------")
-	'''
+	results = powerlaw.Fit(data)
 	print(results.power_law.alpha)
 	print(results.power_law.xmin)
 	print(np.isfinite(data).all())
@@ -295,7 +301,6 @@ def plot_power_law(graph):
 	# Logarithmic bins?
 	fit.plot_pdf(color = 'g')
 	plt.show()
-	'''
 
 def plot_degree_dist(graph):
 	"""
@@ -398,16 +403,22 @@ def create_artist_attributes_file(graph):
 				row = [node, artist_name[node], genre[node], active_start[node], danceability[node], energy[node], valence[node], tempo[node], loudness[node], key[node], acousticness[node], instrumentalness[node], liveness[node], speechiness[node], duration_ms[node], popularity[node], count[node]]
 				filewriter.writerow(row)
 
-# As a csv.reader is usuable once and only once we write the lines of our csv file to a list 
-with open("influence_data.csv", "rt") as infile:
-	reader = csv.reader(infile)
-	next(reader)
-	influence_data = list(reader) 
+# Open influence_data.csv and data_by_artists.csv
+influence_csv_reader = csv.reader(open("influence_data.csv"), delimiter=",")
+artist_csv_reader = csv.reader(open("data_by_artist.csv"),delimiter=",")
+# Disgard the first row of influence_data.csv and data_by_artsit.csv as the column labels are unneeded.
+next(influence_csv_reader)
+next(artist_csv_reader)
 
-# As a csv.reader is usuable once and only once we write the lines of our csv file to a list 
-with open("data_by_artist.csv", "rt") as infile:
-	reader = csv.reader(infile)
-	next(reader)
-	artist_data = list(reader) 
+# Construct our graph
+inf_graph = build_graph(influence_csv_reader, artist_csv_reader)
+create_artist_attributes_file(inf_graph)
+#plot_degree_dist(inf_graph)
+plot_power_law(inf_graph)
 
+#pos = nx.spring_layout(inf_graph)
+#nx.draw(inf_graph, pos, node_size = 10) 
+#nx.draw_networkx_labels(inf_graph, pos)
+#plt.savefig("graph.pdf")
+#plt.show()
 

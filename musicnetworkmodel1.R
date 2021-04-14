@@ -48,14 +48,9 @@ artists5 <- artists5[!duplicated(artists5$artist_id), ]
 #Create network graph with the disconnected nodes removed
 net1 <- graph_from_data_frame(d=influence3, vertices=artists5, directed=T) 
 
-V(net1)$color <- graphcolors(V(net1)$influencer_main_genre)
-
 plot(net1, vertex.shape="none", vertex.label=V(net1)$artist_name, 
      vertex.label.font=2, vertex.label.color="gray40",
      vertex.label.cex=.7, edge.color="gray85", edge.arrow.size=.2)
-
-graphcolors <- pal_d3(palette = c("category20"), alpha = 1)
-
 
 
 characteristics <- full_music_data[,c(3,4,5,6,7,9,10,11,12,13,15,16)]
