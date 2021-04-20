@@ -1,0 +1,189 @@
+---
+title: "Kruskal-Wallis Testing by Genre"
+output: html_notebook
+---
+
+This is an [R Markdown](http://rmarkdown.rstudio.com) Notebook. When you execute code within the notebook, the results appear beneath the code. 
+
+We calculate summary statistics for the measure "danceability" for each genre and plot box plots for each genre. 
+Since for most of the measures, the data is not normally distributed, rather than performing an ANOVA test (which required data to be normally distributed) we perform a Kruskal-Wallis test, using "artist_genre" as the grouping variable. In the event that we obtain a result that indicates significant differences, we perform pairwise comparisons using a Dunn test, and export the comparison test results to a CSV file. 
+
+
+```{r}
+data_by_artist_with_genre %>% 
+  group_by(artist_genre) %>%
+  get_summary_stats(danceability, type = "common")
+
+ggboxplot(data_by_artist_with_genre, x = "artist_genre", y = "danceability", x.text.angle = 90)
+
+kruskal.test(data_by_artist_with_genre$danceability~data_by_artist_with_genre$artist_genre)
+
+
+pwc_danceability <- data_by_artist_with_genre %>% 
+  dunn_test(danceability ~ artist_genre, p.adjust.method = "bonferroni") 
+write.csv(pwc_danceability, "pwcdanceability.csv")
+```
+
+Next, we repeat these steps for the characteristic "energy".
+
+```{r}
+data_by_artist_with_genre %>% 
+  group_by(artist_genre) %>%
+  get_summary_stats(energy, type = "common")
+
+ggboxplot(data_by_artist_with_genre, x = "artist_genre", y = "energy", x.text.angle = 90)
+
+kruskal.test(data_by_artist_with_genre$energy~data_by_artist_with_genre$artist_genre)
+#Kruskal-Wallis chi-squared = 1707.2, df = 19, p-value < 2.2e-16
+
+pwc_energy <- data_by_artist_with_genre %>% 
+  dunn_test(energy ~ artist_genre, p.adjust.method = "bonferroni") 
+write.csv(pwc_energy, "pwcenergy.csv")
+```
+
+We repeat for the characteristic "valence".
+
+```{r}
+data_by_artist_with_genre %>% 
+  group_by(artist_genre) %>%
+  get_summary_stats(valence, type = "common")
+
+ggboxplot(data_by_artist_with_genre, x = "artist_genre", y = "valence", x.text.angle = 90)
+
+kruskal.test(data_by_artist_with_genre$valence~data_by_artist_with_genre$artist_genre)
+
+
+pwc_valence <- data_by_artist_with_genre %>% 
+  dunn_test(valence ~ artist_genre, p.adjust.method = "bonferroni") 
+write.csv(pwc_valence, "pwcvalence.csv")
+```
+
+We repeat for the characteristic "tempo". 
+
+```{r}
+data_by_artist_with_genre %>% 
+  group_by(artist_genre) %>%
+  get_summary_stats(tempo, type = "common")
+
+ggboxplot(data_by_artist_with_genre, x = "artist_genre", y = "tempo", x.text.angle = 90)
+
+kruskal.test(data_by_artist_with_genre$tempo~data_by_artist_with_genre$artist_genre)
+
+
+pwc_tempo <- data_by_artist_with_genre %>% 
+  dunn_test(tempo ~ artist_genre, p.adjust.method = "bonferroni") 
+write.csv(pwc_tempo, "pwctempo.csv")
+```
+
+We repeat for the characteristic "loudness".
+
+```{r}
+data_by_artist_with_genre %>% 
+  group_by(artist_genre) %>%
+  get_summary_stats(loudness, type = "common")
+
+ggboxplot(data_by_artist_with_genre, x = "artist_genre", y = "loudness", x.text.angle = 90)
+
+kruskal.test(data_by_artist_with_genre$loudness~data_by_artist_with_genre$artist_genre)
+
+
+pwc_loudness <- data_by_artist_with_genre %>% 
+  dunn_test(loudness ~ artist_genre, p.adjust.method = "bonferroni") 
+write.csv(pwc_loudness, "pwcloudness.csv")
+```
+
+We repeat for the characteristic "key". Key is a nominal variable that has been assigned numerical values using Pitch Class Notation. 
+
+```{r}
+data_by_artist_with_genre %>% 
+  group_by(artist_genre) %>%
+  get_summary_stats(key, type = "common")
+
+ggboxplot(data_by_artist_with_genre, x = "artist_genre", y = "key", x.text.angle = 90)
+
+kruskal.test(data_by_artist_with_genre$key~data_by_artist_with_genre$artist_genre)
+
+pwc_key <- data_by_artist_with_genre %>% 
+  dunn_test(key ~ artist_genre, p.adjust.method = "bonferroni") 
+write.csv(pwc_key, "pwckey.csv")
+```
+
+We repeat for the characteristic "acousticness". 
+
+```{r}
+data_by_artist_with_genre %>% 
+  group_by(artist_genre) %>%
+  get_summary_stats(acousticness, type = "common")
+
+ggboxplot(data_by_artist_with_genre, x = "artist_genre", y = "acousticness", x.text.angle = 90)
+
+kruskal.test(data_by_artist_with_genre$acousticness~data_by_artist_with_genre$artist_genre)
+
+pwc_acousticness <- data_by_artist_with_genre %>% 
+  dunn_test(acousticness ~ artist_genre, p.adjust.method = "bonferroni") 
+write.csv(pwc_acousticness, "pwcacousticness.csv")
+```
+
+For the characteristic "instrumentalness":
+
+```{r}
+data_by_artist_with_genre %>% 
+  group_by(artist_genre) %>%
+  get_summary_stats(instrumentalness, type = "common")
+
+ggboxplot(data_by_artist_with_genre, x = "artist_genre", y = "instrumentalness", x.text.angle = 90)
+
+kruskal.test(data_by_artist_with_genre$instrumentalness~data_by_artist_with_genre$artist_genre)
+
+pwc_instrumentalness <- data_by_artist_with_genre %>% 
+  dunn_test(instrumentalness ~ artist_genre, p.adjust.method = "bonferroni") 
+write.csv(pwc_instrumentalness, "pwcinstrumentalness.csv")
+```
+
+For the characteristic "liveness": 
+
+```{r}
+data_by_artist_with_genre %>% 
+  group_by(artist_genre) %>%
+  get_summary_stats(liveness, type = "common")
+
+ggboxplot(data_by_artist_with_genre, x = "artist_genre", y = "liveness", x.text.angle = 90)
+
+kruskal.test(data_by_artist_with_genre$liveness~data_by_artist_with_genre$artist_genre)
+
+pwc_liveness <- data_by_artist_with_genre %>% 
+  dunn_test(liveness ~ artist_genre, p.adjust.method = "bonferroni") 
+write.csv(pwc_liveness, "pwcliveness.csv")
+```
+
+For the characteristic "speechiness": 
+```{r}
+data_by_artist_with_genre %>% 
+  group_by(artist_genre) %>%
+  get_summary_stats(speechiness, type = "common")
+
+ggboxplot(data_by_artist_with_genre, x = "artist_genre", y = "speechiness", x.text.angle = 90)
+
+kruskal.test(data_by_artist_with_genre$speechiness~data_by_artist_with_genre$artist_genre)
+
+pwc_speechiness <- data_by_artist_with_genre %>% 
+  dunn_test(speechiness ~ artist_genre, p.adjust.method = "bonferroni") 
+write.csv(pwc_speechiness, "pwcspeechiness.csv")
+```
+
+For the characteristic "duration_ms": 
+
+```{r}
+data_by_artist_with_genre %>% 
+  group_by(artist_genre) %>%
+  get_summary_stats(duration_ms, type = "common")
+
+ggboxplot(data_by_artist_with_genre, x = "artist_genre", y = "duration_ms", x.text.angle = 90)
+
+kruskal.test(data_by_artist_with_genre$duration_ms~data_by_artist_with_genre$artist_genre)
+
+pwc_durationms <- data_by_artist_with_genre %>% 
+  dunn_test(duration_ms ~ artist_genre, p.adjust.method = "bonferroni") 
+write.csv(pwc_durationms, "pwcdurationms.csv")
+```
+
