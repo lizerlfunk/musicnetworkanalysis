@@ -1,0 +1,78 @@
+Artist Bob Dylan is in community 8.
+-----------------------------------------------------------------
+Artist Led Zeppelin is in community 9.
+-----------------------------------------------------------------
+Artist Jimi Hendrix is in community 3.
+-----------------------------------------------------------------
+Artist The Beatles is in community 1.
+-----------------------------------------------------------------
+Artist The Velvet Underground is in community 4.
+-----------------------------------------------------------------
+Artist The Beach Boys is in community 1.
+-----------------------------------------------------------------
+Artist Miles Davis is in community 14.
+-----------------------------------------------------------------
+Artist Jefferson Airplane is in community 8.
+-----------------------------------------------------------------
+Artist The Rolling Stones is in community 1.
+-----------------------------------------------------------------
+Artist Cab Calloway is in community 2.
+-----------------------------------------------------------------
+Artist T-Bone Walker is in community 2.
+-----------------------------------------------------------------
+Artist Charlie Christian is in community 6.
+-----------------------------------------------------------------
+Artist The Kinks is in community 1.
+-----------------------------------------------------------------
+Artist Chuck Berry is in community 1.
+-----------------------------------------------------------------
+Artist Elvis Presley is in community 1.
+-----------------------------------------------------------------
+Artist Little Richard is in community 17.
+-----------------------------------------------------------------
+Artist Billie Holiday is in community 6.
+-----------------------------------------------------------------
+Artist Billy Eckstine is in community 2.
+-----------------------------------------------------------------
+Artist Ray Charles is in community 2.
+-----------------------------------------------------------------
+Artist Sex Pistols is in community 10.
+-----------------------------------------------------------------
+Artist James Brown is in community 5.
+-----------------------------------------------------------------
+Artist David Bowie is in community 4.
+-----------------------------------------------------------------
+Artist Sister Rosetta Tharpe is in community 6.
+-----------------------------------------------------------------
+Artist Muddy Waters is in community 3.
+-----------------------------------------------------------------
+Artist Hank Williams is in community 7.
+-----------------------------------------------------------------
+Artist Roy Acuff is in community 7.
+-----------------------------------------------------------------
+Artist Sly & the Family Stone is in community 5.
+-----------------------------------------------------------------
+Artist Howlin' Wolf is in community 3.
+-----------------------------------------------------------------
+Artist Louis Jordan is in community 2.
+-----------------------------------------------------------------
+Artist Willie Nelson is in community 15.
+-----------------------------------------------------------------
+Artist Hoyt Axton is in community 8.
+-----------------------------------------------------------------
+Artist Lester Young is in community 6.
+-----------------------------------------------------------------
+Artist Nat King Cole is in community 2.
+-----------------------------------------------------------------
+Artist Uncle Tupelo is in community 10.
+-----------------------------------------------------------------
+Artist Roy Brown is in community 2.
+-----------------------------------------------------------------
+Artist The Mills Brothers is in community 11.
+-----------------------------------------------------------------
+Artist The Kingston Trio is in community 8.
+-----------------------------------------------------------------
+Artist Wynonie Harris is in community 2.
+-----------------------------------------------------------------
+Artist Phosphorescent is in community 15.
+-----------------------------------------------------------------
