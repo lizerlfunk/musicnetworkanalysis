@@ -1,0 +1,464 @@
+---
+title: "ERGM Fitting"
+output: ergmfitting
+---
+
+Code adapted from Chapter 6 of "Statistical Analysis of Network Data in R" by Kolacsyk and Csardi and https://gvegayon.github.io/appliedsnar/the-ergm-package.html. 
+
+Load necessary packages.
+
+```{r}
+library(ergm)
+library(intergraph)
+```
+
+Convert igraph network "net1" to network object.
+
+```{r}
+network_influence <- intergraph::asNetwork(net1)
+
+# Running a simple ergm (only fitting edge count)
+ergm(network_influence ~ edges)
+```
+Add vertex attributes to network graph.
+
+```{r}
+network::set.vertex.attribute(network_influence, "Genre",
+                              data_by_artist_with_genre$artist_genre)
+network::set.vertex.attribute(network_influence, "Danceability",
+                              data_by_artist_with_genre$danceability)
+network::set.vertex.attribute(network_influence, "Energy",
+                              data_by_artist_with_genre$energy)
+network::set.vertex.attribute(network_influence, "Loudness",
+                              data_by_artist_with_genre$loudness)
+network::set.vertex.attribute(network_influence, "Valence",
+                              data_by_artist_with_genre$valence)
+network::set.vertex.attribute(network_influence, "Tempo",
+                              data_by_artist_with_genre$tempo)
+network::set.vertex.attribute(network_influence, "Key",
+                              data_by_artist_with_genre$key)
+network::set.vertex.attribute(network_influence, "Acousticness",
+                              data_by_artist_with_genre$acousticness)
+network::set.vertex.attribute(network_influence, "Instrumentalness",
+                              data_by_artist_with_genre$instrumentalness)
+network::set.vertex.attribute(network_influence, "Liveness",
+                              data_by_artist_with_genre$liveness)
+network::set.vertex.attribute(network_influence, "Speechiness",
+                              data_by_artist_with_genre$speechiness)
+network::set.vertex.attribute(network_influence, "Duration",
+                              data_by_artist_with_genre$duration_ms)
+network::set.vertex.attribute(network_influence, "ActiveStart",
+                              data_by_artist_with_genre$active_start)
+```
+
+
+Create Bernoulli random graph model.
+
+```{r}
+my.ergm.bern <- formula(network_influence ~ edges)
+my.ergm.bern
+summary(my.ergm.bern)
+#degreedist(network_influence)
+```
+
+
+Fit ERGMs using vertex characteristics. Add characteristics individually.
+
+```{r}
+network_influence1d.ergm <- formula(network_influence ~ edges
+                       + nodeicov("Danceability"))
+
+set.seed(42)
+network_influence.ergm1d.fit <- ergm(network_influence1d.ergm)
+```
+```{r}
+anova(network_influence.ergm1d.fit, eval.loglik = TRUE, scale = 0, test = "F")
+
+summary(network_influence.ergm1d.fit)
+```
+
+```{r}
+network_influence2d.ergm <- formula(network_influence ~ edges
+                       + nodeicov("Danceability")
+                       + nodeicov("Energy"))
+
+set.seed(42)
+network_influence.ergm2d.fit <- ergm(network_influence2d.ergm)
+```
+
+```{r}
+anova(network_influence.ergm2d.fit, eval.loglik = TRUE, scale = 0, test = "F")
+
+summary(network_influence.ergm2d.fit)
+```
+```{r}
+network_influence3d.ergm <- formula(network_influence ~ edges
+                       + nodeicov("Loudness")
+                       + nodeicov("Danceability")
+                       + nodeicov("Energy"))
+
+set.seed(42)
+network_influence.ergm3d.fit <- ergm(network_influence3d.ergm)
+```
+
+```{r}
+anova(network_influence.ergm3d.fit, eval.loglik = TRUE, scale = 0, test = "F")
+
+summary(network_influence.ergm3d.fit)
+```
+
+```{r}
+network_influence4d.ergm <- formula(network_influence ~ edges
+                       + nodeicov("Loudness")
+                       + nodeicov("Danceability")
+                       + nodeicov("Energy")
+                       + nodeicov("Valence"))
+
+set.seed(42)
+network_influence.ergm4d.fit <- ergm(network_influence4d.ergm)
+```
+
+```{r}
+anova(network_influence.ergm4d.fit, eval.loglik = TRUE, scale = 0, test = "F")
+
+summary(network_influence.ergm4d.fit)
+```
+
+```{r}
+network_influence5d.ergm <- formula(network_influence ~ edges
+                       + nodeicov("Loudness")
+                       + nodeicov("Danceability")
+                       + nodeicov("Energy")
+                       + nodeicov("Valence")
+                       + nodeicov("Tempo"))
+
+set.seed(42)
+network_influence.ergm5d.fit <- ergm(network_influence5d.ergm)
+```
+```{r}
+anova(network_influence.ergm5d.fit, eval.loglik = TRUE, scale = 0, test = "F")
+
+summary(network_influence.ergm5d.fit)
+```
+
+```{r}
+network_influence6d.ergm <- formula(network_influence ~ edges
+                       + nodeicov("Loudness")
+                       + nodeicov("Danceability")
+                       + nodeicov("Energy")
+                       + nodeicov("Valence")
+                       + nodeicov("Tempo")
+                       + nodeicov("Acousticness"))
+
+set.seed(42)
+network_influence.ergm6d.fit <- ergm(network_influence6d.ergm)
+```
+
+```{r}
+anova(network_influence.ergm6d.fit, eval.loglik = TRUE, scale = 0, test = "F")
+
+summary(network_influence.ergm6d.fit)
+```
+
+
+```{r}
+network_influence7d.ergm <- formula(network_influence ~ edges
+                       + nodeicov("Loudness")
+                       + nodeicov("Danceability")
+                       + nodeicov("Energy")
+                       + nodeicov("Valence")
+                       + nodeicov("Tempo")
+                       + nodeicov("Acousticness")
+                       + nodeicov("Instrumentalness"))
+
+set.seed(42)
+network_influence.ergm7d.fit <- ergm(network_influence7d.ergm)
+```
+
+```{r}
+anova(network_influence.ergm7d.fit, eval.loglik = TRUE, scale = 0, test = "F")
+
+summary(network_influence.ergm7d.fit)
+```
+
+
+```{r}
+network_influence8d.ergm <- formula(network_influence ~ edges
+                       + nodeicov("Loudness")
+                       + nodeicov("Danceability")
+                       + nodeicov("Energy")
+                       + nodeicov("Valence")
+                       + nodeicov("Tempo")
+                       + nodeicov("Acousticness")
+                       + nodeicov("Instrumentalness")
+                       + nodeicov("Liveness"))
+
+set.seed(42)
+network_influence.ergm8d.fit <- ergm(network_influence8d.ergm)
+```
+
+```{r}
+anova(network_influence.ergm8d.fit, eval.loglik = TRUE, scale = 0, test = "F")
+
+summary(network_influence.ergm8d.fit)
+```
+
+
+```{r}
+network_influence9d.ergm <- formula(network_influence ~ edges
+                       + nodeicov("Loudness")
+                       + nodeicov("Danceability")
+                       + nodeicov("Energy")
+                       + nodeicov("Valence")
+                       + nodeicov("Tempo")
+                       + nodeicov("Acousticness")
+                       + nodeicov("Instrumentalness")
+                       + nodeicov("Liveness")
+                       + nodeicov("Speechiness"))
+
+set.seed(42)
+network_influence.ergm9d.fit <- ergm(network_influence9d.ergm)
+```
+
+```{r}
+anova(network_influence.ergm9d.fit, eval.loglik = TRUE, scale = 0, test = "F")
+
+summary(network_influence.ergm9d.fit)
+```
+
+
+```{r}
+network_influence10d.ergm <- formula(network_influence ~ edges
+                       + nodeicov("Loudness")
+                       + nodeicov("Danceability")
+                       + nodeicov("Energy")
+                       + nodeicov("Valence")
+                       + nodeicov("Tempo")
+                       + nodeicov("Acousticness")
+                       + nodeicov("Instrumentalness")
+                       + nodeicov("Liveness")
+                       + nodeicov("Speechiness")
+                       + match("Genre"))
+
+set.seed(42)
+network_influence.ergm10d.fit <- ergm(network_influence10d.ergm)
+```
+```{r}
+anova(network_influence.ergm10d.fit, eval.loglik = TRUE, scale = 0, test = "F")
+summary(network_influence.ergm10d.fit)
+```
+```{r}
+network_influence11d.ergm <- formula(network_influence ~ edges
+                       + nodeicov("Loudness")
+                       + nodeicov("Danceability")
+                       + nodeicov("Energy")
+                       + nodeicov("Valence")
+                       + nodeicov("Tempo")
+                       + nodeicov("Acousticness")
+                       + nodeicov("Instrumentalness")
+                       + nodeicov("Liveness")
+                       + nodeicov("Speechiness")
+                       + match("Key")
+                       + match("Genre"))
+
+set.seed(42)
+network_influence.ergm11d.fit <- ergm(network_influence11d.ergm)
+```
+
+```{r}
+anova(network_influence.ergm11d.fit, eval.loglik = TRUE, scale = 0, test = "F")
+summary(network_influence.ergm11d.fit)
+```
+```{r}
+gof.network.ergm11d <- gof(network_influence.ergm11d.fit)
+
+plot(gof.network.ergm11d)
+```
+```{r}
+gof.network.ergm11d
+```
+
+
+```{r}
+network_influence12d.ergm <- formula(network_influence ~ edges
+                       + nodeicov("Loudness")
+                       + nodeicov("Danceability")
+                       + nodeicov("Energy")
+                       + nodeicov("Valence")
+                       + nodeicov("Tempo")
+                       + nodeicov("Acousticness")
+                       + nodeicov("Instrumentalness")
+                       + nodeicov("Liveness")
+                       + nodeicov("Speechiness")
+                       + nodeicov("Key")
+                       + match("Key")
+                       + match("Genre"))
+
+set.seed(42)
+network_influence.ergm12d.fit <- ergm(network_influence12d.ergm)
+```
+
+```{r}
+anova(network_influence.ergm12d.fit, eval.loglik = TRUE, scale = 0, test = "F")
+summary(network_influence.ergm12d.fit)
+```
+
+Model 12 directed is worse than model 11 directed. We should not include Key as an in-degree covariate. 
+
+```{r}
+network_influence13d.ergm <- formula(network_influence ~ edges
+                       + nodeicov("Loudness")
+                       + nodeicov("Danceability")
+                       + nodeicov("Energy")
+                       + nodeicov("Valence")
+                       + nodeicov("Tempo")
+                       + nodeicov("Acousticness")
+                       + nodeicov("Instrumentalness")
+                       + nodeicov("Liveness")
+                       + nodeicov("Speechiness")
+                       + nodefactor("Genre")
+                       + match("Key")
+                       + match("Genre"))
+
+set.seed(42)
+network_influence.ergm13d.fit <- ergm(network_influence13d.ergm)
+```
+
+```{r}
+anova(network_influence.ergm13d.fit, eval.loglik = TRUE, scale = 0, test = "F")
+summary(network_influence.ergm13d.fit)
+```
+
+
+```{r}
+gof.network.ergm13d <- gof(network_influence.ergm13d.fit)
+
+plot(gof.network.ergm13d)
+
+summary(gof.network.ergm13d)
+
+```
+```{r}
+gof.network.ergm13d
+```
+
+
+```{r}
+network_influence14d.ergm <- formula(network_influence ~ edges
+                       + match("Genre"))
+
+set.seed(42)
+network_influence.ergm14d.fit <- ergm(network_influence14d.ergm)
+```
+
+
+```{r}
+anova(network_influence.ergm14d.fit, eval.loglik = TRUE, scale = 0, test = "F")
+summary(network_influence.ergm14d.fit)
+```
+```{r}
+gof.network.ergm14d <- gof(network_influence.ergm14d.fit)
+
+plot(gof.network.ergm14d)
+```
+```{r}
+gof.network.ergm14d
+```
+
+```{r}
+network_influence15d.ergm <- formula(network_influence ~ edges
+                       + nodeicov("Loudness")
+                       + nodeicov("Danceability")
+                       + nodeicov("Energy")
+                       + nodeicov("Valence")
+                       + nodeicov("Tempo")
+                       + nodeicov("Acousticness")
+                       + nodeicov("Instrumentalness")
+                       + nodeicov("Liveness")
+                       + nodeicov("Speechiness")
+                       + nodematch("Key"))
+
+set.seed(42)
+network_influence.ergm15d.fit <- ergm(network_influence15d.ergm)
+```
+```{r}
+anova(network_influence.ergm15d.fit, eval.loglik = TRUE, scale = 0, test = "F")
+
+summary(network_influence.ergm15d.fit)
+```
+
+```{r}
+gof.network.ergm15d <- gof(network_influence.ergm15d.fit)
+
+plot(gof.network.ergm15d)
+```
+```{r}
+network_influence16d.ergm <- formula(network_influence ~ edges
+                       + nodeicov("Loudness")
+                       + nodeicov("Danceability")
+                       + nodeicov("Energy")
+                       + nodeicov("Valence")
+                       + nodeicov("Tempo")
+                       + nodeicov("Acousticness")
+                       + nodeicov("Instrumentalness")
+                       + nodeicov("Liveness")
+                       + nodeicov("Speechiness")
+                       + match("Key")
+                       + match("Genre"))
+
+set.seed(42)
+network_influence.ergm16d.fit <- ergm(network_influence16d.ergm)
+```
+
+
+```{r}
+anova(network_influence.ergm16d.fit, eval.loglik = TRUE, scale = 0, test = "F")
+
+summary(network_influence.ergm16d.fit)
+```
+
+```{r}
+gof.network.ergm16d <- gof(network_influence.ergm16d.fit)
+
+plot(gof.network.ergm16d)
+```
+```{r}
+gof.network.ergm16d
+```
+
+```{r}
+network_influence17d.ergm <- formula(network_influence ~ edges
+                       + nodeicov("Loudness")
+                       + nodeicov("Danceability")
+                       + nodeicov("Energy")
+                       + nodeicov("Valence")
+                       + nodeicov("Tempo")
+                       + nodeicov("Acousticness")
+                       + nodeicov("Instrumentalness")
+                       + nodeicov("Liveness")
+                       + nodeicov("Speechiness")
+                       + nodeicov("Duration")
+                       + nodeicov("ActiveStart")
+                       + match("Key")
+                       + match("Genre"))
+
+set.seed(42)
+network_influence.ergm17d.fit <- ergm(network_influence17d.ergm)
+```
+
+```{r}
+anova(network_influence.ergm17d.fit, eval.loglik = TRUE, scale = 0, test = "F")
+
+summary(network_influence.ergm17d.fit)
+```
+
+```{r}
+gof.network.ergm17d <- gof(network_influence.ergm17d.fit)
+
+plot(gof.network.ergm17d)
+```
+
+```{r}
+gof.network.ergm17d
+```
+

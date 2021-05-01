@@ -1,0 +1,47 @@
+---
+title: "Network Detection"
+output: networkdetection
+---
+
+The Infomap cluster algorithm works with directed graphs, unlike most of the other algorithms. We will use the original graph with all artists included, rather than the graph of just the giant component.
+
+```{r}
+infomap <- cluster_infomap(
+  net1,
+  e.weights = NULL,
+  v.weights = NULL,
+  nb.trials = 30,
+  modularity = FALSE
+)
+sizes(infomap)
+communities(infomap)
+```
+
+
+```{r}
+is.hierarchical(infomap)
+plot(infomap, net1)
+```
+
+
+Add the community membership information to the "data_by_artist_with_centrality" dataframe. 
+
+```{r}
+data_by_artist_with_centrality$community6 <- infomap$membership
+net1$community6 <- infomap$membership
+```
+
+Create subgraphs induced by community membership.
+
+```{r}
+which_ids <- which(degree(ig_year1_111, mode = "total") > 0)
+
+unique(net1$community)
+for (i in unique(net1$community)) { 
+subgraph <- induced_subgraph(net1, v = which(net1$community == i)) 
+}
+```
+
+
+
+
