@@ -1,0 +1,43 @@
+---
+title: "Music Network Model Data Import"
+output: html_notebook
+---
+In this notebook, we import data, clean it, and create the network graph that will be used for analyzing data throughout the project.
+
+Load necessary packages.
+
+```{r}
+library(igraph)
+library(Hmisc)
+```
+
+Import data into R. Note: Users must change directory to reflect correct file path.
+
+```{r}
+full_music_data <- read.csv("~/Documents/Documents - Elizabeth’s MacBook Pro (6321)/Github/musicnetworkanalysis/ICM Problem Data/full_music_data.csv")
+View(full_music_data)
+
+influence_data <- read.csv("~/Documents/Documents - Elizabeth’s MacBook Pro (6321)/Github/musicnetworkanalysis/ICM Problem Data/influence_data.csv")
+View(influence_data)
+
+data_by_artist <- read.csv("~/Documents/Documents - Elizabeth’s MacBook Pro (6321)/Github/musicnetworkanalysis/ICM Problem Data/data_by_artist.csv")
+View(data_by_artist)
+
+data_by_year <- read.csv("~/Documents/Documents - Elizabeth’s MacBook Pro (6321)/Github/musicnetworkanalysis/ICM Problem Data/data_by_year.csv")
+View(data_by_year)
+```
+
+Reorder columns and remove unnecessary columns from influence data.
+
+```{r}
+colnames(influence_data)
+influence2 <- influence_data[, c(1, 5, 2, 3, 4, 6, 7, 8)]
+View(influence2)
+```
+Import data that has combined artist data with genre data from influence data.
+
+```{r}
+data_by_artist_with_genre <- read.csv("~/Documents/Documents - Elizabeth’s MacBook Pro (6321)/Github/musicnetworkanalysis/ICM Problem Data/data_by_artist_with_genre.csv")
+View(data_by_artist_with_genre)
+```
+

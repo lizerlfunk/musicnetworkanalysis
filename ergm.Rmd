@@ -64,6 +64,8 @@ summary(my.ergm.bern)
 
 Fit ERGMs using vertex characteristics. Add characteristics individually.
 
+ERGM with characteristic danceability:
+
 ```{r}
 network_influence1.ergm <- formula(network_influence ~ edges
                        + nodemain("Danceability"))
@@ -77,6 +79,8 @@ anova(network_influence.ergm1.fit, eval.loglik = TRUE, scale = 0, test = "F")
 summary(network_influence.ergm1.fit)
 ```
 
+ERGM with characteristics danceability and energy:
+
 ```{r}
 network_influence2.ergm <- formula(network_influence ~ edges
                        + nodemain("Danceability")
@@ -85,6 +89,8 @@ network_influence2.ergm <- formula(network_influence ~ edges
 set.seed(42)
 network_influence.ergm2.fit <- ergm(network_influence2.ergm)
 ```
+
+ERGM with characteristics danceability, loudness, energy:
 
 ```{r}
 anova(network_influence.ergm2.fit, eval.loglik = TRUE, scale = 0, test = "F")
@@ -107,6 +113,8 @@ anova(network_influence.ergm3.fit, eval.loglik = TRUE, scale = 0, test = "F")
 summary(network_influence.ergm3.fit)
 ```
 
+ERGM with characteristics loudness, danceability, energy, valence:
+
 ```{r}
 network_influence4.ergm <- formula(network_influence ~ edges
                        + nodemain("Loudness")
@@ -124,6 +132,8 @@ anova(network_influence.ergm4.fit, eval.loglik = TRUE, scale = 0, test = "F")
 summary(network_influence.ergm4.fit)
 ```
 
+ERGM with characteristics loudness, danceability, energy, valence, tempo:
+
 ```{r}
 network_influence5.ergm <- formula(network_influence ~ edges
                        + nodemain("Loudness")
@@ -140,6 +150,8 @@ anova(network_influence.ergm5.fit, eval.loglik = TRUE, scale = 0, test = "F")
 
 summary(network_influence.ergm5.fit)
 ```
+
+ERGM with characteristics loudness, danceability, energy, valence, tempo, acousticness:
 
 ```{r}
 network_influence6.ergm <- formula(network_influence ~ edges
@@ -160,6 +172,7 @@ anova(network_influence.ergm6.fit, eval.loglik = TRUE, scale = 0, test = "F")
 summary(network_influence.ergm6.fit)
 ```
 
+ERGM with characteristics loudness, danceability, energy, valence, tempo, acousticness, instrumentalness:
 
 ```{r}
 network_influence7.ergm <- formula(network_influence ~ edges
@@ -181,6 +194,7 @@ anova(network_influence.ergm7.fit, eval.loglik = TRUE, scale = 0, test = "F")
 summary(network_influence.ergm7.fit)
 ```
 
+ERGM with characteristics loudness, danceability, energy, valence, tempo, acousticness, instrumentalness, liveness:
 
 ```{r}
 network_influence8.ergm <- formula(network_influence ~ edges
@@ -203,6 +217,7 @@ anova(network_influence.ergm8.fit, eval.loglik = TRUE, scale = 0, test = "F")
 summary(network_influence.ergm8.fit)
 ```
 
+ERGM with characteristics loudness, danceability, energy, valence, tempo, acousticness, instrumentalness, liveness, speechiness:
 
 ```{r}
 network_influence9.ergm <- formula(network_influence ~ edges
@@ -226,6 +241,7 @@ anova(network_influence.ergm9.fit, eval.loglik = TRUE, scale = 0, test = "F")
 summary(network_influence.ergm9.fit)
 ```
 
+ERGM with characteristics loudness, danceability, energy, valence, tempo, acousticness, instrumentalness, liveness, speechiness, genre matching:
 
 ```{r}
 network_influence10.ergm <- formula(network_influence ~ edges
@@ -243,10 +259,15 @@ network_influence10.ergm <- formula(network_influence ~ edges
 set.seed(42)
 network_influence.ergm10.fit <- ergm(network_influence10.ergm)
 ```
+
+
 ```{r}
 anova(network_influence.ergm10.fit, eval.loglik = TRUE, scale = 0, test = "F")
 summary(network_influence.ergm10.fit)
 ```
+
+ERGM with characteristics loudness, danceability, energy, valence, tempo, acousticness, instrumentalness, liveness, speechiness, genre matching, key matching:
+
 ```{r}
 network_influence11.ergm <- formula(network_influence ~ edges
                        + nodemain("Loudness")
@@ -269,6 +290,9 @@ network_influence.ergm11.fit <- ergm(network_influence11.ergm)
 anova(network_influence.ergm11.fit, eval.loglik = TRUE, scale = 0, test = "F")
 summary(network_influence.ergm11.fit)
 ```
+
+
+
 ```{r}
 gof.network.ergm11 <- gof(network_influence.ergm11.fit)
 
@@ -277,7 +301,7 @@ plot(gof.network.ergm11)
 gof.network.ergm11
 ```
 
-
+ERGM with characteristics loudness, danceability, energy, valence, tempo, acousticness, instrumentalness, liveness, speechiness, key, genre matching, key matching:
 
 ```{r}
 network_influence12.ergm <- formula(network_influence ~ edges
@@ -313,7 +337,7 @@ gof.network.ergm12
 
 ```
 
-
+ERGM with characteristics loudness, danceability, energy, valence, tempo, acousticness, instrumentalness, liveness, speechiness, key, genre, genre matching, key matching:
 
 ```{r}
 network_influence13.ergm <- formula(network_influence ~ edges
@@ -348,6 +372,9 @@ plot(gof.network.ergm13)
 
 gof.network.ergm13
 ```
+
+ERGM with characteristics loudness, danceability, energy, valence, tempo, acousticness, instrumentalness, liveness, speechiness, key, duration, genre, genre matching, key matching:
+
 ```{r}
 network_influence14.ergm <- formula(network_influence ~ edges
                        + nodemain("Loudness")
@@ -373,6 +400,8 @@ network_influence.ergm14.fit <- ergm(network_influence14.ergm)
 anova(network_influence.ergm14.fit, eval.loglik = TRUE, scale = 0, test = "F")
 summary(network_influence.ergm14.fit)
 ```
+
+ERGM with characteristics loudness, danceability, energy, valence, tempo, acousticness, instrumentalness, liveness, speechiness, key, duration, start date, genre, genre matching, key matching:
 
 ```{r}
 network_influence15.ergm <- formula(network_influence ~ edges

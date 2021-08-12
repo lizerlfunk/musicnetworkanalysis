@@ -3,8 +3,6 @@ title: "Kruskal-Wallis Testing by Genre"
 output: html_notebook
 ---
 
-This is an [R Markdown](http://rmarkdown.rstudio.com) Notebook. When you execute code within the notebook, the results appear beneath the code. 
-
 We calculate summary statistics for the measure "danceability" for each genre and plot box plots for each genre. 
 Since for most of the measures, the data is not normally distributed, rather than performing an ANOVA test (which required data to be normally distributed) we perform a Kruskal-Wallis test, using "artist_genre" as the grouping variable. In the event that we obtain a result that indicates significant differences, we perform pairwise comparisons using a Dunn test, and export the comparison test results to a CSV file. 
 
@@ -187,3 +185,4 @@ pwc_durationms <- data_by_artist_with_genre %>%
 write.csv(pwc_durationms, "pwcdurationms.csv")
 ```
 
+Due to time limitations, this analysis was not incorporated into the final report.
